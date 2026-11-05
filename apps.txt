@@ -1,0 +1,1 @@
+https://raw.githubusercontent.com/itryteam/gitstore/main/apps/cookiegram/app.json
