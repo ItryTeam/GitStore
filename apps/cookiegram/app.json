@@ -5,5 +5,5 @@
   "description": "Cookiegram - неофициальный клиент TG",
   "category": "utilities",
   "version": "1.0.0",
-  "apk": "https://raw.githubusercontent.com/itryteam/gitstore/main/apps/cookiegram/release/app.apk"
+  "apk": "https://github.com/ItryTeam/GitStore/releases/download/cookiegram1.0/app.apk"
 }
