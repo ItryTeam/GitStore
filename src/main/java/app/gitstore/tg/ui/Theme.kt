@@ -16,7 +16,6 @@ private val StoreShapes = Shapes(
     extraLarge = RoundedCornerShape(32.dp)
 )
 
-/** Material 3 + Monet (dynamic color на Android 12+), более скруглённые формы */
 @Composable
 fun StoreTheme(content: @Composable () -> Unit) {
     val dark = isSystemInDarkTheme()
