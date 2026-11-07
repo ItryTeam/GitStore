@@ -45,7 +45,6 @@ private val categoryTitles = mapOf(
 fun categoryTitle(c: String) =
     categoryTitles[c] ?: c.replaceFirstChar { it.uppercase() }
 
-/** Одна вкладка магазина: "Игры" или "Приложения" — шапка, рекомендации и карточки */
 @Composable
 fun StoreTab(
     vm: StoreViewModel,
@@ -121,7 +120,6 @@ private fun Feed(vm: StoreViewModel, type: AppType, onOpen: (String) -> Unit) {
     val recommended = vm.recommended(type)
     val hasRecent = vm.recentIds.isNotEmpty()
     val byCategory = list.groupBy { it.category }
-    // "На любой вкус" — случайная подборка, стабильная в течение дня
     val anyTaste = remember(list) {
         list.shuffled(Random(System.currentTimeMillis() / 86_400_000L)).take(12)
     }
