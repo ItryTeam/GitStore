@@ -1,9 +1,0 @@
-{
-  "id": "app.cookiegram.tg",
-  "name": "Cookiegram",
-  "icon": "https://raw.githubusercontent.com/IGBerko/cookiegram/refs/heads/master/logo.png",
-  "description": "Cookiegram - неофициальный клиент TG",
-  "category": "utilities",
-  "version": "1.0.0",
-  "apk": "https://github.com/ItryTeam/GitStore/releases/download/cookiegram1.0/app.apk"
-}
