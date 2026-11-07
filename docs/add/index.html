@@ -1,0 +1,62 @@
+<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Ctext y=%27.9em%27 font-size=%2790%27%3E%F0%9F%9B%8D%EF%B8%8F%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0&display=swap">
+<title>Добавить приложение — GitStore</title><link rel="stylesheet" href="../assets/m3.css"></head><body>
+<header class="bar"><a class="logo" href="../"><span class="ms">storefront</span>GitStore</a><nav><a class="btn text" href="../">Каталог</a></nav></header>
+<main class="wrap narrow">
+<section class="hero" style="padding-bottom:16px"><h1 style="font-size:40px">Добавить приложение</h1><p class="sub">Заявка попадёт на проверку. Мы скачаем файл и проверим его на вирусы — только после этого приложение появится в магазине.</p></section>
+<div class="card" id="done" hidden style="text-align:center"><span class="ms" style="font-size:56px;color:var(--ok)">check_circle</span><h2 style="margin:8px 0">Заявка отправлена</h2><p class="muted">Номер заявки: <code></code><br>Сохраните его — по нему можно уточнить статус. Свяжемся по указанному контакту.</p><a class="btn tonal" href="">Отправить ещё одну</a></div>
+<form class="card" id="f" autocomplete="off">
+ <input class="hp" name="website" tabindex="-1" autocomplete="off">
+ <div class="row2">
+  <label class="field"><input name="app_name" placeholder=" " required minlength="2" maxlength="60"><span>Название приложения</span></label>
+  <label class="field"><input name="package_id" placeholder=" " required pattern="[a-zA-Z][a-zA-Z0-9_]*(\.[a-zA-Z][a-zA-Z0-9_]*)+" title="Например: app.cookiegram.tg"><span>Package ID</span><small>Например: com.example.notes</small></label></div>
+ <div class="row2">
+  <label class="field"><input name="version" placeholder=" " required maxlength="30"><span>Версия</span><small>Как в versionName APK, например 1.0.0</small></label>
+  <label class="field"><select name="type"><option value="app">Приложение</option><option value="game">Игра</option></select><span>Тип</span></label></div>
+ <label class="field"><select name="category"><option value="utilities">Утилиты</option><option value="tools">Инструменты</option><option value="social">Общение</option><option value="music">Музыка</option><option value="entertainment">Развлечения</option><option value="action">Экшен</option><option value="puzzle">Головоломки</option><option value="other">Другое</option></select><span>Категория</span></label>
+ <label class="field"><textarea name="description" placeholder=" " required minlength="10" maxlength="1000"></textarea><span>Описание</span></label>
+ <label class="field"><textarea name="changelog" placeholder=" " maxlength="1000"></textarea><span>Что нового (необязательно)</span></label>
+ <label class="drop"><span class="ms">image</span><div><b data-l>Иконка приложения</b><br><small>PNG, JPG или WebP, до 1 МБ, лучше 512×512</small></div><input type="file" name="icon" accept="image/png,image/jpeg,image/webp" data-label="Иконка приложения"></label>
+ <label class="drop"><span class="ms">android</span><div><b>APK-файл</b><br><small>до 50 МБ</small></div><input type="file" name="apk" accept=".apk,application/vnd.android.package-archive" data-label="APK-файл"></label>
+ <label class="field"><input name="apk_url" type="url" placeholder=" " maxlength="300"><span>…или ссылка на APK (https)</span><small>Если файл больше 50 МБ — например, ссылка на GitHub Release</small></label>
+ <div class="row2">
+  <label class="field"><input name="dev_name" placeholder=" " required minlength="2" maxlength="60"><span>Имя разработчика</span></label>
+  <label class="field"><input name="contact" placeholder=" " required minlength="3" maxlength="120"><span>Контакт (Telegram / e-mail)</span></label></div>
+ <label class="field"><input name="source_url" type="url" placeholder=" " maxlength="300"><span>Исходный код (необязательно)</span></label>
+ <label class="check"><input type="checkbox" required><span>Подтверждаю, что у меня есть права на приложение и в нём нет вредоносного кода. Я согласен на проверку файла перед публикацией.</span></label>
+ <div class="prog"><i></i></div>
+ <button class="btn lg" id="send" type="submit"><span class="ms">send</span>Отправить заявку</button>
+</form>
+<footer>Нужна помощь? Напишите в <a href="../">GitStore</a></footer></main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script src="../assets/config.js"></script><script src="../assets/util.js"></script>
+<script>
+const f=$('#f'),btn=$('#send'),prog=$('.prog');
+const sb=configured()?supabase.createClient(GS.SUPABASE_URL,GS.SUPABASE_KEY):null;
+document.querySelectorAll('.drop input').forEach(i=>i.addEventListener('change',()=>{i.closest('.drop').querySelector('b').textContent=i.files[0]?.name||i.dataset.label}));
+f.addEventListener('submit',async e=>{
+  e.preventDefault(); if(f.website.value) return;
+  if(!sb) return snack('Сайт ещё не настроен (assets/config.js)');
+  const d=Object.fromEntries(new FormData(f)), icon=f.icon.files[0], apk=f.apk.files[0], apkUrl=(d.apk_url||'').trim();
+  if(!icon) return snack('Добавьте иконку');
+  if(!/^image\/(png|jpeg|webp)$/.test(icon.type)||icon.size>1048576) return snack('Иконка: PNG, JPG или WebP до 1 МБ');
+  if(!apk&&!apkUrl) return snack('Загрузите APK или укажите ссылку');
+  if(apk&&(!/\.apk$/i.test(apk.name)||apk.size>52428800)) return snack('APK: файл .apk до 50 МБ (или дайте ссылку)');
+  if(apkUrl&&!/^https:\/\//i.test(apkUrl)) return snack('Ссылка на APK должна начинаться с https://');
+  btn.disabled=true; prog.classList.add('on');
+  try{
+    const id=crypto.randomUUID(), bucket=sb.storage.from('submissions');
+    const ext=icon.type==='image/png'?'png':icon.type==='image/webp'?'webp':'jpg';
+    let r=await bucket.upload(`${id}/icon.${ext}`,icon,{contentType:icon.type}); if(r.error) throw r.error;
+    let apk_path=null;
+    if(apk){ r=await bucket.upload(`${id}/app.apk`,apk,{contentType:'application/vnd.android.package-archive'}); if(r.error) throw r.error; apk_path=`${id}/app.apk`; }
+    const t=k=>(d[k]||'').trim()||null;
+    const {error}=await sb.from('submissions').insert({id,app_name:t('app_name'),package_id:t('package_id'),version:t('version'),type:d.type,category:d.category,
+      description:t('description'),changelog:t('changelog'),dev_name:t('dev_name'),contact:t('contact'),source_url:t('source_url'),apk_path,apk_url:apkUrl||null,icon_path:`${id}/icon.${ext}`});
+    if(error) throw error;
+    f.hidden=true; $('#done').hidden=false; $('#done code').textContent=id; scrollTo({top:0,behavior:'smooth'});
+  }catch(err){ console.error(err); snack('Не удалось отправить: '+(err.message||err)); }
+  finally{ btn.disabled=false; prog.classList.remove('on'); }
+});
+</script></body></html>
