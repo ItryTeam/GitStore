@@ -13,7 +13,6 @@ sealed interface AppStatus {
 
 object InstalledApps {
 
-    /** versionName установленного приложения или null, если не установлено */
     fun versionOf(context: Context, packageName: String): String? = try {
         context.packageManager.getPackageInfo(packageName, 0).versionName ?: ""
     } catch (_: PackageManager.NameNotFoundException) {
@@ -26,7 +25,6 @@ object InstalledApps {
         else AppStatus.Installed(installedVersion)
     }
 
-    /** true, если remote строго новее local ("1.10.0" > "1.9.2") */
     fun isNewer(remote: String, local: String): Boolean {
         if (remote.isBlank()) return false
         val r = parts(remote)
@@ -48,7 +46,6 @@ object InstalledApps {
         return true
     }
 
-    /** Открывает системный диалог удаления */
     fun uninstall(context: Context, packageName: String) {
         context.startActivity(
             Intent(Intent.ACTION_DELETE, Uri.parse("package:$packageName"))
