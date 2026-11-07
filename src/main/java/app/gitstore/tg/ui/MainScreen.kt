@@ -37,7 +37,7 @@ fun MainScreen(
     onSignOut: () -> Unit,
     onSync: () -> Unit
 ) {
-    // по умолчанию открыта средняя вкладка — "Приложения"
+
     var selected by rememberSaveable { mutableIntStateOf(Tab.Apps.ordinal) }
 
     Scaffold(
@@ -54,7 +54,7 @@ fun MainScreen(
             }
         }
     ) { pad ->
-        // сверху отступ берут на себя сами экраны (statusBarsPadding / TopAppBar)
+
         Box(Modifier.fillMaxSize().padding(bottom = pad.calculateBottomPadding())) {
             when (Tab.entries[selected]) {
                 Tab.Games -> StoreTab(vm, AppType.GAME, onOpen, onUpdates, onSignIn, onSignOut, onSync)
