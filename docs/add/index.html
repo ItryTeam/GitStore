@@ -28,7 +28,7 @@
  <div class="prog"><i></i></div>
  <button class="btn lg" id="send" type="submit"><span class="ms">send</span>Отправить заявку</button>
 </form>
-<footer>Нужна помощь? Напишите в <a href="../">GitStore</a></footer></main>
+<footer>Нужна помощь? <a href="../support/">Поддержка</a></footer></main>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <script src="../assets/config.js"></script><script src="../assets/util.js"></script>
 <script>
@@ -48,9 +48,9 @@ f.addEventListener('submit',async e=>{
   try{
     const id=crypto.randomUUID(), bucket=sb.storage.from('submissions');
     const ext=icon.type==='image/png'?'png':icon.type==='image/webp'?'webp':'jpg';
-    let r=await bucket.upload(`${id}/icon.${ext}`,icon,{contentType:icon.type}); if(r.error) throw r.error;
+    let r=await bucket.upload(`${id}/icon.${ext}`,new Blob([icon],{type:icon.type}),{contentType:icon.type}); if(r.error) throw r.error;
     let apk_path=null;
-    if(apk){ r=await bucket.upload(`${id}/app.apk`,apk,{contentType:'application/vnd.android.package-archive'}); if(r.error) throw r.error; apk_path=`${id}/app.apk`; }
+    if(apk){ r=await bucket.upload(`${id}/app.apk`,new Blob([apk],{type:'application/vnd.android.package-archive'}),{contentType:'application/vnd.android.package-archive'}); if(r.error) throw r.error; apk_path=`${id}/app.apk`; }
     const t=k=>(d[k]||'').trim()||null;
     const {error}=await sb.from('submissions').insert({id,app_name:t('app_name'),package_id:t('package_id'),version:t('version'),type:d.type,category:d.category,
       description:t('description'),changelog:t('changelog'),dev_name:t('dev_name'),contact:t('contact'),source_url:t('source_url'),apk_path,apk_url:apkUrl||null,icon_path:`${id}/icon.${ext}`});
