@@ -11,7 +11,6 @@ import java.net.URL
 
 object Repository {
 
-    /** apps.txt -> по одной ссылке на строку, каждая ссылка ведёт на app.json приложения */
     suspend fun loadApps(): List<StoreApp> = withContext(Dispatchers.IO) {
         val links = fetch(Config.APPS_URL).lines()
             .map { it.trim() }
@@ -35,7 +34,6 @@ object Repository {
     private fun parse(json: String): StoreApp {
         val o = JSONObject(json)
         val category = o.optString("category", "other").lowercase()
-        // "type": "game" | "app". Если не указан — игрой считаем category game/games/entertainment
         val type = when (o.optString("type").lowercase()) {
             "game", "games" -> AppType.GAME
             "app", "apps" -> AppType.APP
