@@ -1,2 +1,4 @@
 https://raw.githubusercontent.com/itryteam/gitstore/main/apps/cookiegram/app.json
 https://raw.githubusercontent.com/ItryTeam/GitStore/main/apps/organicmaps/app.json
+https://raw.githubusercontent.com/ItryTeam/GitStore/main/apps/minetest/app.json
+https://raw.githubusercontent.com/ItryTeam/GitStore/main/apps/mindustry/app.json
