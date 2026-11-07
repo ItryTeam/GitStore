@@ -62,7 +62,6 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    // вернулись из установщика / из другого приложения — обновляем статусы
     override fun onResume() {
         super.onResume()
         vm.refreshInstalled()
