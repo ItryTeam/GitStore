@@ -88,8 +88,7 @@ fun AppDetailScreen(vm: StoreViewModel, id: String, onBack: () -> Unit) {
                 AssistChip(onClick = {}, label = { Text(categoryTitle(app.category)) })
             }
             Spacer(Modifier.height(20.dp))
-
-            // Кнопка под логотипом
+            
             when {
                 dl is DownloadState.Progress -> {
                     Button(onClick = {}, enabled = false, modifier = btn) {
@@ -106,8 +105,7 @@ fun AppDetailScreen(vm: StoreViewModel, id: String, onBack: () -> Unit) {
                         Spacer(Modifier.width(8.dp)); Text("Открыть")
                     }
                 }
-
-                // уже скачано, но ещё не поставлено / не обновлено
+                
                 dl is DownloadState.Ready -> {
                     FilledTonalButton(onClick = { vm.install(app) }, modifier = btn) {
                         Icon(Icons.Rounded.InstallMobile, null)
@@ -131,7 +129,6 @@ fun AppDetailScreen(vm: StoreViewModel, id: String, onBack: () -> Unit) {
                 }
             }
 
-            // Размер загрузки (пока приложение не установлено или есть обновление)
             if (size != null && status !is AppStatus.Installed && dl !is DownloadState.Progress) {
                 Spacer(Modifier.height(8.dp))
                 Text(
@@ -141,7 +138,7 @@ fun AppDetailScreen(vm: StoreViewModel, id: String, onBack: () -> Unit) {
                 )
             }
 
-            // Удаление
+
             if (status !is AppStatus.NotInstalled) {
                 TextButton(
                     onClick = { vm.uninstall(app) },
@@ -152,7 +149,6 @@ fun AppDetailScreen(vm: StoreViewModel, id: String, onBack: () -> Unit) {
                 }
             }
 
-            // Что нового
             if (app.changelog.isNotBlank()) {
                 Spacer(Modifier.height(16.dp))
                 ElevatedCard(shape = RoundedCornerShape(24.dp), modifier = Modifier.fillMaxWidth()) {
