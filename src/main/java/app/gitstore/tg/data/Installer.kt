@@ -13,7 +13,6 @@ import java.net.URL
 
 object Installer {
 
-    /** Размер APK в байтах (читаем только заголовки), -1 если неизвестен */
     suspend fun fetchSize(url: String): Long = withContext(Dispatchers.IO) {
         val c = URL(url).openConnection() as HttpURLConnection
         c.instanceFollowRedirects = true
