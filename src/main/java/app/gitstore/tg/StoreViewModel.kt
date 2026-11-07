@@ -29,7 +29,6 @@ class StoreViewModel(private val app: Application) : AndroidViewModel(app) {
     val downloads = mutableStateMapOf<String, DownloadState>()
     val sizes = mutableStateMapOf<String, Long>()
 
-    /** id приложения -> установленная versionName (только для установленных) */
     var installedVersions by mutableStateOf<Map<String, String>>(emptyMap()); private set
 
     private var cachedToken: String? = null
@@ -37,15 +36,12 @@ class StoreViewModel(private val app: Application) : AndroidViewModel(app) {
 
     init { refresh() }
 
-    // ---------- каталог ----------
-
     fun refresh() {
         viewModelScope.launch {
             loading = true; error = null
             runCatching { Repository.loadApps() }
                 .onSuccess {
                     apps = it
-                    // устаревшие скачанные файлы не используем
                     downloads.filterValues { s -> s is DownloadState.Ready }.keys.forEach { k -> downloads.remove(k) }
                     refreshInstalled()
                 }
@@ -56,12 +52,10 @@ class StoreViewModel(private val app: Application) : AndroidViewModel(app) {
 
     fun byId(id: String) = apps.find { it.id == id }
 
-    /** Вызывать при возврате в магазин (после установки/удаления) */
     fun refreshInstalled() {
         installedVersions = apps.mapNotNull { a ->
             InstalledApps.versionOf(app, a.id)?.let { a.id to it }
         }.toMap()
-        // файл уже установлен — готовый APK больше не нужен
         apps.forEach { a ->
             if (statusOf(a) is AppStatus.Installed && downloads[a.id] is DownloadState.Ready) downloads.remove(a.id)
         }
@@ -75,7 +69,6 @@ class StoreViewModel(private val app: Application) : AndroidViewModel(app) {
 
     fun updates(): List<StoreApp> = apps.filter { statusOf(it) is AppStatus.UpdateAvailable }
 
-    /** Рекомендации: сначала из категорий недавно скачанного, потом остальное; установленные не показываем */
     fun recommended(type: AppType? = null): List<StoreApp> {
         val recent = recentIds.mapNotNull { byId(it) }
         val cats = recent.map { it.category }.toSet()
@@ -86,7 +79,6 @@ class StoreViewModel(private val app: Application) : AndroidViewModel(app) {
         return (sameCat + other).take(10)
     }
 
-    // ---------- скачивание / установка ----------
 
     private suspend fun fetchApk(a: StoreApp): Boolean {
         if (downloads[a.id] is DownloadState.Ready) return true
@@ -117,7 +109,6 @@ class StoreViewModel(private val app: Application) : AndroidViewModel(app) {
         (downloads[a.id] as? DownloadState.Ready)?.let { Installer.install(app, it.path) }
     }
 
-    /** Скачивает все обновления, затем ставит их по очереди */
     fun updateAll() {
         val list = updates().filter { downloads[it.id] !is DownloadState.Progress }
         if (list.isEmpty()) return
@@ -129,7 +120,6 @@ class StoreViewModel(private val app: Application) : AndroidViewModel(app) {
         }
     }
 
-    /** Вызывается из onResume: после закрытия системного установщика ставим следующее */
     fun continueQueue() {
         if (installQueue.isNotEmpty()) nextInstall()
     }
@@ -138,7 +128,7 @@ class StoreViewModel(private val app: Application) : AndroidViewModel(app) {
         if (!app.packageManager.canRequestPackageInstalls()) {
             installQueue.clear()
             val any = apps.firstNotNullOfOrNull { downloads[it.id] as? DownloadState.Ready }
-            any?.let { Installer.install(app, it.path) } // откроет экран разрешения
+            any?.let { Installer.install(app, it.path) }
             return
         }
         while (installQueue.isNotEmpty()) {
@@ -166,7 +156,6 @@ class StoreViewModel(private val app: Application) : AndroidViewModel(app) {
         }
     }
 
-    // ---------- аккаунт и синхронизация истории (Google Drive appDataFolder) ----------
 
     fun signIn(activity: Activity, launchConsent: (IntentSenderRequest) -> Unit) {
         viewModelScope.launch {
@@ -193,7 +182,6 @@ class StoreViewModel(private val app: Application) : AndroidViewModel(app) {
         }
     }
 
-    /** interactive=false — тихая попытка при запуске (без окон и тостов) */
     fun sync(activity: Activity, interactive: Boolean, launchConsent: (IntentSenderRequest) -> Unit) {
         if (user == null) return
         viewModelScope.launch {
@@ -212,7 +200,6 @@ class StoreViewModel(private val app: Application) : AndroidViewModel(app) {
         }
     }
 
-    /** Результат окна согласия Google на доступ к Drive */
     fun onConsentResult(activity: Activity, data: Intent?) {
         runCatching { Identity.getAuthorizationClient(activity).getAuthorizationResultFromIntent(data) }
             .onSuccess { r -> r.accessToken?.let { t -> viewModelScope.launch { pushHistory(t, true) } } }
@@ -231,14 +218,11 @@ class StoreViewModel(private val app: Application) : AndroidViewModel(app) {
             }
     }
 
-    // ---------- кеш загрузок ----------
-
     private fun apkDir() = java.io.File(app.cacheDir, "apks")
 
     fun cacheSize(): Long =
         apkDir().walkTopDown().filter { it.isFile }.sumOf { it.length() }
 
-    /** Удаляет скачанные APK, возвращает освобождённый размер */
     fun clearCache(): Long {
         val size = cacheSize()
         apkDir().listFiles()?.forEach { it.delete() }
