@@ -51,7 +51,7 @@ fun SettingsScreen(
             Modifier.padding(pad).fillMaxSize().verticalScroll(rememberScrollState()).padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            // Аккаунт
+
             ElevatedCard(shape = RoundedCornerShape(24.dp), modifier = Modifier.fillMaxWidth()) {
                 Column(Modifier.padding(20.dp)) {
                     if (user == null) {
@@ -99,7 +99,7 @@ fun SettingsScreen(
                 }
             }
 
-            // Остальные настройки
+
             ElevatedCard(shape = RoundedCornerShape(24.dp), modifier = Modifier.fillMaxWidth()) {
                 Column {
                     ListItem(
