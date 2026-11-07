@@ -7,7 +7,7 @@ data class StoreApp(
     val name: String,
     val icon: String,
     val description: String,
-    val category: String,   // любая строка: utilities, social, action, ...
+    val category: String, 
     val apk: String,
     val version: String,
     val changelog: String = "",
