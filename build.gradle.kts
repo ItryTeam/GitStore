@@ -15,12 +15,10 @@ android {
         versionCode = 1
         versionName = "1.0"
 
-        // 1) RAW-ссылка на твой apps.txt в GitHub
         buildConfigField(
             "String", "APPS_URL",
             "\"https://raw.githubusercontent.com/itryteam/gitstore/main/apps.txt\""
         )
-        // 2) Web client ID из Google Cloud Console (тип "Web application")
         buildConfigField(
             "String", "WEB_CLIENT_ID",
             "\"8788533008-cafqt4f67ef1jpcfdvvj41o480ltle9i.apps.googleusercontent.com\""
@@ -57,7 +55,6 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.8.2")
     implementation("io.coil-kt:coil-compose:2.7.0")
 
-    // Вход через Google (Credential Manager)
     implementation("androidx.credentials:credentials:1.3.0")
     implementation("androidx.credentials:credentials-play-services-auth:1.3.0")
     implementation("com.google.android.libraries.identity.googleid:googleid:1.1.1")
