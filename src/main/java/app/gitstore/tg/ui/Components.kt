@@ -51,7 +51,6 @@ fun Modifier.shimmer(): Modifier {
     )
 }
 
-/** Логотип: блик пока грузится, значок Android если картинки нет, тонкая рамка */
 @Composable
 fun AppIcon(url: String, size: Dp, modifier: Modifier = Modifier) {
     val cs = MaterialTheme.colorScheme
@@ -77,7 +76,6 @@ fun AppIcon(url: String, size: Dp, modifier: Modifier = Modifier) {
     )
 }
 
-/** Логотип с кольцом прогресса вокруг (страница приложения) */
 @Composable
 fun DownloadingIcon(url: String, size: Dp, progress: Float?) {
     val anim by animateFloatAsState(progress ?: 0f, label = "progress")
@@ -97,7 +95,6 @@ fun DownloadingIcon(url: String, size: Dp, progress: Float?) {
     }
 }
 
-/** Квадратная карточка: логотип + название, бейдж статуса и кольцо загрузки */
 @Composable
 fun SquareCard(
     app: StoreApp,
@@ -170,7 +167,6 @@ fun SquareCard(
     }
 }
 
-/** Широкая карточка в стиле Steam-капсулы для блока "Рекомендуем" */
 @Composable
 fun FeaturedCard(app: StoreApp, onClick: () -> Unit) {
     val cs = MaterialTheme.colorScheme
@@ -207,7 +203,6 @@ fun FeaturedCard(app: StoreApp, onClick: () -> Unit) {
     }
 }
 
-/** Скелетон ленты вместо крутилки */
 @Composable
 fun FeedSkeleton() {
     Column(
