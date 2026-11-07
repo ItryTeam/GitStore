@@ -1,0 +1,10 @@
+{
+  "id": "net.minetest.minetest",
+  "name": "Luanti",
+  "icon": "https://raw.githubusercontent.com/ItryTeam/GitStore/main/apps/minetest/icon.png",
+  "description": "Luanti (ранее Minetest) - это платформа для создания игр с открытым исходным кодом с легким моддингом и созданием игр.",
+  "category": "entertainment",
+  "type": "game",
+  "version": "5.18.0",
+  "apk": "https://github.com/luanti-org/luanti/releases/download/5.18.0/luanti-5.18.0-arm64-v8a.apk"
+}
