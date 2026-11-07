@@ -17,10 +17,6 @@ import java.net.URLEncoder
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
-/**
- * Хранит историю скачиваний в скрытой папке приложения (appDataFolder) на Google Drive пользователя.
- * Файл виден только этому приложению и не занимает место в обычном Drive.
- */
 object DriveSync {
     private const val SCOPE = "https://www.googleapis.com/auth/drive.appdata"
     private const val FILE_NAME = "history.json"
@@ -34,7 +30,6 @@ object DriveSync {
         return Identity.getAuthorizationClient(activity).authorize(request).await()
     }
 
-    /** Склеивает локальную историю с облачной, сохраняет результат в облако и возвращает его */
     suspend fun merge(token: String, local: List<String>): List<String> = withContext(Dispatchers.IO) {
         val fileId = findFile(token)
         val remote = if (fileId != null) parse(call("GET", "$API/$fileId?alt=media", token)) else emptyList()
@@ -78,7 +73,7 @@ object DriveSync {
         conn.connectTimeout = 15_000
         conn.readTimeout = 15_000
         conn.setRequestProperty("Authorization", "Bearer $token")
-        if (method == "PATCH") { // HttpURLConnection не умеет PATCH — используем override
+        if (method == "PATCH") { 
             conn.requestMethod = "POST"
             conn.setRequestProperty("X-HTTP-Method-Override", "PATCH")
         } else {
